@@ -6,7 +6,6 @@
 
 
 #include "glfwwrapper/Cursor.hpp"
-#include "glfwwrapper/utils.hpp"
 
 
 namespace tbaricault::glfwwrapper
@@ -27,7 +26,11 @@ namespace tbaricault::glfwwrapper
 
     Cursor::Cursor(const tbaricault::images::Image& image, const tbaricault::math::Vector2<int>& hotspot)
     {
-        GLFWimage glfwImage = extractImage(image);
+        GLFWimage glfwImage = {
+            image.getSize().x,
+            image.getSize().y,
+            reinterpret_cast<unsigned char*>(image.getPixels()),
+        };
         this->_glfwElement = glfwCreateCursor(
             &glfwImage,
             hotspot.x,

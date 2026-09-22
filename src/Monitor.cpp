@@ -21,28 +21,6 @@ namespace tbaricault::glfwwrapper
     std::vector<std::reference_wrapper<Monitor>> Monitor::_references = {};
 
 
-    void Monitor::init()
-    {
-        Monitor::cleanup();
-        glfwSetMonitorCallback(Monitor::_callback);
-        int count;
-        GLFWmonitor** monitors = glfwGetMonitors(&count);
-        if (!monitors)
-            return;
-        for (int i = 0; i < count; i++)
-            Monitor::_registered[monitors[i]] = std::make_unique<Monitor>(monitors[i]);
-        Monitor::_updateReferences();
-        return;
-    }
-
-    void Monitor::cleanup() noexcept
-    {
-        glfwSetMonitorCallback(nullptr);
-        Monitor::_registered.clear();
-        Monitor::_references.clear();
-        return;
-    }
-
     std::size_t Monitor::getCount() noexcept
     {
         return (Monitor::_registered.size());
@@ -275,7 +253,6 @@ namespace tbaricault::glfwwrapper
                 break;
             }
         }
-        Monitor::_updateReferences();
         return;
     }
 

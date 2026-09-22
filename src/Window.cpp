@@ -5,7 +5,7 @@
  */
 
 
-#include "glfwwrapper/utils.hpp"
+#include "glfwwrapper/events.hpp"
 #include "glfwwrapper/Window.hpp"
 
 
@@ -356,7 +356,11 @@ namespace tbaricault::glfwwrapper
     {
         if (icon)
         {
-            GLFWimage image = extractImage(icon);
+            GLFWimage image = {
+                icon.getSize().x,
+                icon.getSize().y,
+                reinterpret_cast<unsigned char*>(icon.getPixels()),
+            };
             glfwSetWindowIcon(this->_glfwElement, 1, &image);
         }
         else
@@ -370,7 +374,13 @@ namespace tbaricault::glfwwrapper
     {
         GLFWimage* images = new GLFWimage[icons.size()];
         for (std::size_t i = 0; i < icons.size(); i++)
-            images[i] = extractImage(icons[i]);
+        {
+            images[i] = {
+                icons[i].getSize().x,
+                icons[i].getSize().y,
+                reinterpret_cast<unsigned char*>(icons[i].getPixels()),
+            };
+        }
         glfwSetWindowIcon(this->_glfwElement, icons.size(), images);
         delete[] images;
         return;
@@ -694,7 +704,7 @@ namespace tbaricault::glfwwrapper
     void Window::_handleClose()
     {
         if (glfwWindowShouldClose(this->_glfwElement))
-            wakeUp();
+            events::wakeUp();
         return;
     }
 

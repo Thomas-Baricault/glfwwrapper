@@ -94,16 +94,6 @@ namespace tbaricault::glfwwrapper
 
 
             /**
-             * @brief Initializes monitors
-             */
-            static void init();
-
-            /**
-             * @brief Cleans up registered monitors
-             */
-            static void cleanup() noexcept;
-
-            /**
              * @brief Returns monitors count
              * 
              * @return Number of monitors
@@ -298,6 +288,9 @@ namespace tbaricault::glfwwrapper
              * @brief Updates references vector
              */
             static void _updateReferences();
+
+
+            friend class Context;
 
     };
 

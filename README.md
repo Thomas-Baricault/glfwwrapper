@@ -107,9 +107,9 @@ class Window
         using tbaricault::glfwwrapper::Window::Window;
 
 
-        virtual bool render() override
+        virtual bool _render() override
         {
-            tbaricault::glfwwrapper::Window::render();
+            tbaricault::glfwwrapper::Window::_render();
 
             glBegin(GL_TRIANGLES);
             glColor4f(1, 0, 0, 1);
@@ -128,16 +128,15 @@ class Window
 
 int main()
 {
-    tbaricault::glfwwrapper::init();
-
-    Window w("Test");
-    while (w)
+    TBARICAULT_GLFWWRAPPER_INIT
     {
-        tbaricault::glfwwrapper::pollEvents();
-        w.update();
+        Window w("Test");
+        while (w)
+        {
+            tbaricault::glfwwrapper::events::poll();
+            w.update();
+        }
     }
-
-    tbaricault::glfwwrapper::cleanup();
 
     return (0);
 }
