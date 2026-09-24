@@ -104,55 +104,55 @@ namespace tbaricault::glfwwrapper
     }
 
     Window::Window(Window&& other) noexcept
-        : _glfwElement(other._glfwElement)
+        : _handle(other._handle)
     {
-        other._glfwElement = nullptr;
+        other._handle = nullptr;
         return;
     }
 
     Window::Window(const std::string& title, const tbaricault::math::Vector2<int>& size, const Monitor& monitor, const Window& share)
     {
-        this->_glfwElement = glfwCreateWindow(
+        this->_handle = glfwCreateWindow(
             size.x,
             size.y,
             title.c_str(),
             monitor
-                ? monitor.getGLFWElement()
+                ? monitor.getHandle()
                 : nullptr,
             share
-                ? share._glfwElement
+                ? share._handle
                 : nullptr
         );
-        if (this->_glfwElement)
+        if (this->_handle)
         {
-            glfwMakeContextCurrent(this->_glfwElement);
+            glfwMakeContextCurrent(this->_handle);
             glewInit();
-            glfwSetWindowUserPointer(this->_glfwElement, this);
-            glfwSetInputMode(this->_glfwElement, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
-            glfwSetWindowPosCallback(this->_glfwElement, Window::_moveCallback);
-            glfwSetWindowSizeCallback(this->_glfwElement, Window::_resizeCallback);
-            glfwSetWindowIconifyCallback(this->_glfwElement, Window::_iconifyCallback);
-            glfwSetWindowMaximizeCallback(this->_glfwElement, Window::_maximizeCallback);
-            glfwSetFramebufferSizeCallback(this->_glfwElement, Window::_framebufferResizeCallback);
-            glfwSetWindowContentScaleCallback(this->_glfwElement, Window::_contentScaleCallback);
-            glfwSetWindowFocusCallback(this->_glfwElement, Window::_focusCallback);
-            glfwSetKeyCallback(this->_glfwElement, Window::_keyCallback);
-            glfwSetCharCallback(this->_glfwElement, Window::_charCallback);
-            glfwSetMouseButtonCallback(this->_glfwElement, Window::_mouseButtonCallback);
-            glfwSetScrollCallback(this->_glfwElement, Window::_scrollCallback);
-            glfwSetCursorPosCallback(this->_glfwElement, Window::_cursorMoveCallback);
-            glfwSetCursorEnterCallback(this->_glfwElement, Window::_cursorHoverCallback);
-            glfwSetDropCallback(this->_glfwElement, Window::_dropCallback);
-            glfwSetWindowRefreshCallback(this->_glfwElement, Window::_refreshCallback);
-            glfwSetWindowCloseCallback(this->_glfwElement, Window::_closeCallback);
+            glfwSetWindowUserPointer(this->_handle, this);
+            glfwSetInputMode(this->_handle, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
+            glfwSetWindowPosCallback(this->_handle, Window::_moveCallback);
+            glfwSetWindowSizeCallback(this->_handle, Window::_resizeCallback);
+            glfwSetWindowIconifyCallback(this->_handle, Window::_iconifyCallback);
+            glfwSetWindowMaximizeCallback(this->_handle, Window::_maximizeCallback);
+            glfwSetFramebufferSizeCallback(this->_handle, Window::_framebufferResizeCallback);
+            glfwSetWindowContentScaleCallback(this->_handle, Window::_contentScaleCallback);
+            glfwSetWindowFocusCallback(this->_handle, Window::_focusCallback);
+            glfwSetKeyCallback(this->_handle, Window::_keyCallback);
+            glfwSetCharCallback(this->_handle, Window::_charCallback);
+            glfwSetMouseButtonCallback(this->_handle, Window::_mouseButtonCallback);
+            glfwSetScrollCallback(this->_handle, Window::_scrollCallback);
+            glfwSetCursorPosCallback(this->_handle, Window::_cursorMoveCallback);
+            glfwSetCursorEnterCallback(this->_handle, Window::_cursorHoverCallback);
+            glfwSetDropCallback(this->_handle, Window::_dropCallback);
+            glfwSetWindowRefreshCallback(this->_handle, Window::_refreshCallback);
+            glfwSetWindowCloseCallback(this->_handle, Window::_closeCallback);
         }
         return;
     }
 
     Window::~Window() noexcept
     {
-        if (this->_glfwElement)
-            glfwDestroyWindow(this->_glfwElement);
+        if (this->_handle)
+            glfwDestroyWindow(this->_handle);
         return;
     }
 
@@ -160,117 +160,117 @@ namespace tbaricault::glfwwrapper
     {
         if (&other == this)
             return (*this);
-        this->_glfwElement = other._glfwElement;
-        other._glfwElement = nullptr;
+        this->_handle = other._handle;
+        other._handle = nullptr;
         return (*this);
     }
 
     Window::operator bool() const noexcept
     {
-        return (this->_glfwElement != nullptr);
+        return (this->_handle != nullptr);
     }
 
     bool Window::isWindowed() const noexcept
     {
-        return (glfwGetWindowMonitor(this->_glfwElement) == nullptr);
+        return (glfwGetWindowMonitor(this->_handle) == nullptr);
     }
 
     bool Window::isFocused() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_FOCUSED));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_FOCUSED));
     }
 
     bool Window::isIconified() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_ICONIFIED));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_ICONIFIED));
     }
 
     bool Window::isMaximized() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_MAXIMIZED));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_MAXIMIZED));
     }
 
     bool Window::isHovered() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_HOVERED));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_HOVERED));
     }
 
     bool Window::isVisible() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_VISIBLE));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_VISIBLE));
     }
 
     bool Window::isResizable() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_RESIZABLE));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_RESIZABLE));
     }
 
     bool Window::isDecorated() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_DECORATED));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_DECORATED));
     }
 
     bool Window::isAutoIconify() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_AUTO_ICONIFY));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_AUTO_ICONIFY));
     }
 
     bool Window::isHoverAll() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_FLOATING));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_FLOATING));
     }
 
     bool Window::isTransparent() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_TRANSPARENT_FRAMEBUFFER));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_TRANSPARENT_FRAMEBUFFER));
     }
 
     bool Window::isFocusedOnShow() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_FOCUS_ON_SHOW));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_FOCUS_ON_SHOW));
     }
 
     bool Window::isMousePassThrought() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_glfwElement, GLFW_MOUSE_PASSTHROUGH));
+        return (glfwGetWindowAttrib(this->_handle, GLFW_MOUSE_PASSTHROUGH));
     }
 
     bool Window::isKeyPressed(Keyboard::Key key) const noexcept
     {
-        return (glfwGetKey(this->_glfwElement, static_cast<int>(key)) == static_cast<int>(Keyboard::Action::Pressed));
+        return (glfwGetKey(this->_handle, static_cast<int>(key)) == static_cast<int>(Keyboard::Action::Pressed));
     }
 
     bool Window::isMouseButtonPressed(Mouse::Button button) const noexcept
     {
-        return (glfwGetMouseButton(this->_glfwElement, static_cast<int>(button)) == static_cast<int>(Mouse::Action::Pressed));
+        return (glfwGetMouseButton(this->_handle, static_cast<int>(button)) == static_cast<int>(Mouse::Action::Pressed));
     }
 
     Monitor& Window::getMonitor() const noexcept
     {
-        return (Monitor::getByGLFWElement(glfwGetWindowMonitor(this->_glfwElement)));
+        return (Monitor::getByGLFWElement(glfwGetWindowMonitor(this->_handle)));
     }
 
     std::string Window::getTitle() const
     {
-        const char* title = glfwGetWindowTitle(this->_glfwElement);
+        const char* title = glfwGetWindowTitle(this->_handle);
         return (title ? title : "");
     }
 
     float Window::getOpacity() const noexcept
     {
-        return (glfwGetWindowOpacity(this->_glfwElement));
+        return (glfwGetWindowOpacity(this->_handle));
     }
 
     tbaricault::math::Rect<int> Window::getRect() const noexcept
     {
         tbaricault::math::Rect<int> rect;
         glfwGetWindowPos(
-            this->_glfwElement,
+            this->_handle,
             &rect.x,
             &rect.y
         );
         glfwGetWindowSize(
-            this->_glfwElement,
+            this->_handle,
             &rect.w,
             &rect.h
         );
@@ -281,7 +281,7 @@ namespace tbaricault::glfwwrapper
     {
         tbaricault::math::Rect<int> rect;
         glfwGetWindowFrameSize(
-            this->_glfwElement,
+            this->_handle,
             &rect.x,
             &rect.y,
             &rect.w,
@@ -294,7 +294,7 @@ namespace tbaricault::glfwwrapper
     {
         tbaricault::math::Vector2<int> size;
         glfwGetFramebufferSize(
-            this->_glfwElement,
+            this->_handle,
             &size.x,
             &size.y
         );
@@ -305,7 +305,7 @@ namespace tbaricault::glfwwrapper
     {
         tbaricault::math::Vector2<float> size;
         glfwGetWindowContentScale(
-            this->_glfwElement,
+            this->_handle,
             &size.x,
             &size.y
         );
@@ -339,7 +339,7 @@ namespace tbaricault::glfwwrapper
     {
         tbaricault::math::Vector2<double> pos;
         glfwGetCursorPos(
-            this->_glfwElement,
+            this->_handle,
             &pos.x,
             &pos.y
         );
@@ -348,7 +348,7 @@ namespace tbaricault::glfwwrapper
 
     void Window::setTitle(const std::string& title) noexcept
     {
-        glfwSetWindowTitle(this->_glfwElement, title.c_str());
+        glfwSetWindowTitle(this->_handle, title.c_str());
         return;
     }
 
@@ -361,11 +361,11 @@ namespace tbaricault::glfwwrapper
                 icon.getSize().y,
                 reinterpret_cast<unsigned char*>(icon.getPixels()),
             };
-            glfwSetWindowIcon(this->_glfwElement, 1, &image);
+            glfwSetWindowIcon(this->_handle, 1, &image);
         }
         else
         {
-            glfwSetWindowIcon(this->_glfwElement, 0, nullptr);
+            glfwSetWindowIcon(this->_handle, 0, nullptr);
         }
         return;
     }
@@ -381,7 +381,7 @@ namespace tbaricault::glfwwrapper
                 reinterpret_cast<unsigned char*>(icons[i].getPixels()),
             };
         }
-        glfwSetWindowIcon(this->_glfwElement, icons.size(), images);
+        glfwSetWindowIcon(this->_handle, icons.size(), images);
         delete[] images;
         return;
     }
@@ -389,9 +389,9 @@ namespace tbaricault::glfwwrapper
     void Window::setCursor(const Cursor& cursor) noexcept
     {
         glfwSetCursor(
-            this->_glfwElement,
+            this->_handle,
             cursor
-                ? cursor.getGLFWElement()
+                ? cursor.getHandle()
                 : nullptr
         );
         return;
@@ -400,14 +400,14 @@ namespace tbaricault::glfwwrapper
     void Window::setCursorMode(Mouse::Mode mode) noexcept
     {
         glfwSetInputMode(
-            this->_glfwElement,
+            this->_handle,
             GLFW_CURSOR,
             static_cast<int>(mode)
         );
         if (glfwRawMouseMotionSupported())
         {
             glfwSetInputMode(
-                this->_glfwElement,
+                this->_handle,
                 GLFW_RAW_MOUSE_MOTION,
                 mode == Mouse::Mode::Disabled
             );
@@ -418,7 +418,7 @@ namespace tbaricault::glfwwrapper
     void Window::setSizeLimits(const tbaricault::math::Vector2<int>& min, const tbaricault::math::Vector2<int>& max) noexcept
     {
         glfwSetWindowSizeLimits(
-            this->_glfwElement,
+            this->_handle,
             min.x < 0 ? GLFW_DONT_CARE : min.x,
             min.y < 0 ? GLFW_DONT_CARE : min.y,
             max.x < 0 ? GLFW_DONT_CARE : max.x,
@@ -430,7 +430,7 @@ namespace tbaricault::glfwwrapper
     void Window::setAspectRatio(const tbaricault::math::Vector2<int>& ratio) noexcept
     {
         glfwSetWindowAspectRatio(
-            this->_glfwElement,
+            this->_handle,
             ratio.x < 0 ? GLFW_DONT_CARE : ratio.x,
             ratio.y < 0 ? GLFW_DONT_CARE : ratio.y
         );
@@ -439,91 +439,91 @@ namespace tbaricault::glfwwrapper
 
     void Window::setOpacity(float value) noexcept
     {
-        glfwSetWindowOpacity(this->_glfwElement, value);
+        glfwSetWindowOpacity(this->_handle, value);
         return;
     }
 
     void Window::setDecorated(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_DECORATED, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_DECORATED, value);
         return;
     }
 
     void Window::setResizable(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_RESIZABLE, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_RESIZABLE, value);
         return;
     }
 
     void Window::setHoverAll(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_FLOATING, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_FLOATING, value);
         return;
     }
 
     void Window::setAutoIconify(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_AUTO_ICONIFY, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_AUTO_ICONIFY, value);
         return;
     }
 
     void Window::setFocusOnShow(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_FOCUS_ON_SHOW, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_FOCUS_ON_SHOW, value);
         return;
     }
 
     void Window::setMousePassThrough(bool value) noexcept
     {
-        glfwSetWindowAttrib(this->_glfwElement, GLFW_MOUSE_PASSTHROUGH, value);
+        glfwSetWindowAttrib(this->_handle, GLFW_MOUSE_PASSTHROUGH, value);
         return;
     }
 
     void Window::setCursorPos(const tbaricault::math::Vector2<double>& pos) noexcept
     {
-        glfwSetCursorPos(this->_glfwElement, pos.x, pos.y);
+        glfwSetCursorPos(this->_handle, pos.x, pos.y);
         return;
     }
 
     void Window::close()
     {
-        glfwSetWindowShouldClose(this->_glfwElement, GLFW_TRUE);
+        glfwSetWindowShouldClose(this->_handle, GLFW_TRUE);
         return;
     }
 
     void Window::hide() noexcept
     {
-        glfwHideWindow(this->_glfwElement);
+        glfwHideWindow(this->_handle);
         return;
     }
 
     void Window::show() noexcept
     {
-        glfwShowWindow(this->_glfwElement);
+        glfwShowWindow(this->_handle);
         return;
     }
 
     void Window::focus() noexcept
     {
-        glfwFocusWindow(this->_glfwElement);
+        glfwFocusWindow(this->_handle);
         return;
     }
 
     void Window::iconify() noexcept
     {
-        glfwIconifyWindow(this->_glfwElement);
+        glfwIconifyWindow(this->_handle);
         return;
     }
 
     void Window::maximize() noexcept
     {
-        glfwMaximizeWindow(this->_glfwElement);
+        glfwMaximizeWindow(this->_handle);
         return;
     }
 
     void Window::restore() noexcept
     {
-        glfwRestoreWindow(this->_glfwElement);
+        glfwRestoreWindow(this->_handle);
         return;
     }
 
@@ -533,8 +533,8 @@ namespace tbaricault::glfwwrapper
             return;
         Monitor::VideoMode mode = monitor.getVideoMode();
         glfwSetWindowMonitor(
-            this->_glfwElement,
-            monitor.getGLFWElement(),
+            this->_handle,
+            monitor.getHandle(),
             0,
             0,
             mode.size.x,
@@ -547,7 +547,7 @@ namespace tbaricault::glfwwrapper
     void Window::windowed(const tbaricault::math::Rect<int>& rect) noexcept
     {
         glfwSetWindowMonitor(
-            this->_glfwElement,
+            this->_handle,
             nullptr,
             rect.x,
             rect.y,
@@ -560,14 +560,14 @@ namespace tbaricault::glfwwrapper
 
     void Window::notify() noexcept
     {
-        glfwRequestWindowAttention(this->_glfwElement);
+        glfwRequestWindowAttention(this->_handle);
         return;
     }
 
     void Window::move(const tbaricault::math::Vector2<int>& pos) noexcept
     {
         glfwSetWindowPos(
-            this->_glfwElement,
+            this->_handle,
             pos.x,
             pos.y
         );
@@ -577,7 +577,7 @@ namespace tbaricault::glfwwrapper
     void Window::resize(const tbaricault::math::Vector2<int>& size) noexcept
     {
         glfwSetWindowSize(
-            this->_glfwElement,
+            this->_handle,
             size.x,
             size.y
         );
@@ -586,30 +586,30 @@ namespace tbaricault::glfwwrapper
 
     void Window::enableVSync() noexcept
     {
-        glfwMakeContextCurrent(this->_glfwElement);
+        glfwMakeContextCurrent(this->_handle);
         glfwSwapInterval(1);
         return;
     }
 
     void Window::disableVSync() noexcept
     {
-        glfwMakeContextCurrent(this->_glfwElement);
+        glfwMakeContextCurrent(this->_handle);
         glfwSwapInterval(0);
         return;
     }
 
     void Window::cancelClose() noexcept
     {
-        glfwSetWindowShouldClose(this->_glfwElement, GLFW_FALSE);
+        glfwSetWindowShouldClose(this->_handle, GLFW_FALSE);
         return;
     }
 
     void Window::update()
     {
-        if (glfwWindowShouldClose(this->_glfwElement))
+        if (glfwWindowShouldClose(this->_handle))
         {
-            glfwDestroyWindow(this->_glfwElement);
-            this->_glfwElement = nullptr;
+            glfwDestroyWindow(this->_handle);
+            this->_handle = nullptr;
         }
         else
         {
@@ -620,7 +620,7 @@ namespace tbaricault::glfwwrapper
 
     bool Window::_render()
     {
-        glfwMakeContextCurrent(this->_glfwElement);
+        glfwMakeContextCurrent(this->_handle);
         return (false);
     }
 
@@ -697,13 +697,13 @@ namespace tbaricault::glfwwrapper
     void Window::_handleRefresh()
     {
         if (this->_render())
-            glfwSwapBuffers(this->_glfwElement);
+            glfwSwapBuffers(this->_handle);
         return;
     }
 
     void Window::_handleClose()
     {
-        if (glfwWindowShouldClose(this->_glfwElement))
+        if (glfwWindowShouldClose(this->_handle))
             events::wakeUp();
         return;
     }

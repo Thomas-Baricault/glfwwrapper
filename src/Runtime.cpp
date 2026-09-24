@@ -8,14 +8,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "glfwwrapper/Context.hpp"
+#include "glfwwrapper/Runtime.hpp"
 #include "glfwwrapper/Monitor.hpp"
 
 
 namespace tbaricault::glfwwrapper
 {
 
-    Context::Context()
+    Runtime::Runtime()
     {
         if (!glfwInit())
             return;
@@ -31,8 +31,10 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    Context::~Context() noexcept
+    Runtime::~Runtime() noexcept
     {
+        if (!this->_valid)
+            return;
         glfwSetMonitorCallback(nullptr);
         Monitor::_registered.clear();
         Monitor::_references.clear();
@@ -40,7 +42,7 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    Context::operator bool() const noexcept
+    Runtime::operator bool() const noexcept
     {
         return (this->_valid);
     }

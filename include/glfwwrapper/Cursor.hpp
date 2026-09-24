@@ -144,7 +144,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @return GLFW pointer
              */
-            GLFWcursor* getGLFWElement() const noexcept;
+            GLFWcursor* getHandle() const noexcept;
 
 
         private:
@@ -152,7 +152,7 @@ namespace tbaricault::glfwwrapper
             /**
              * @brief GLFW pointer
              */
-            GLFWcursor* _glfwElement = nullptr;
+            GLFWcursor* _handle = nullptr;
 
     };
 

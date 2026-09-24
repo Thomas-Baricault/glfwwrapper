@@ -165,7 +165,7 @@ namespace tbaricault::glfwwrapper
             Window(const std::string& title, const tbaricault::math::Vector2<int>& size = {800, 600}, const Monitor& monitor = Monitor::Invalid, const Window& share = {});
 
             /**
-             * @brief Destroys the window
+             * @brief Destructor
              */
             virtual ~Window() noexcept;
 
@@ -687,7 +687,7 @@ namespace tbaricault::glfwwrapper
 
         private:
 
-            GLFWwindow* _glfwElement = nullptr;
+            GLFWwindow* _handle = nullptr;
 
 
             /**

@@ -44,14 +44,14 @@ namespace tbaricault::glfwwrapper
     }
 
     Monitor::Monitor(Monitor&& other) noexcept
-        : _glfwElement(other._glfwElement)
+        : _handle(other._handle)
     {
-        other._glfwElement = nullptr;
+        other._handle = nullptr;
         return;
     }
 
     Monitor::Monitor(GLFWmonitor* glfwMonitor) noexcept
-        : _glfwElement(glfwMonitor)
+        : _handle(glfwMonitor)
     {
         return;
     }
@@ -60,41 +60,41 @@ namespace tbaricault::glfwwrapper
     {
         if (&other == this)
             return (*this);
-        this->_glfwElement = other._glfwElement;
-        other._glfwElement = nullptr;
+        this->_handle = other._handle;
+        other._handle = nullptr;
         return (*this);
     }
 
     Monitor::operator bool() const noexcept
     {
-        return (this->_glfwElement != nullptr);
+        return (this->_handle != nullptr);
     }
 
     bool Monitor::isPrimary() const noexcept
     {
-        return (this->_glfwElement && glfwGetPrimaryMonitor() == this->_glfwElement);
+        return (this->_handle && glfwGetPrimaryMonitor() == this->_handle);
     }
 
-    GLFWmonitor* Monitor::getGLFWElement() const noexcept
+    GLFWmonitor* Monitor::getHandle() const noexcept
     {
-        return (this->_glfwElement);
+        return (this->_handle);
     }
 
     std::string Monitor::getName() const
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return ("");
-        const char* str = glfwGetMonitorName(this->_glfwElement);
+        const char* str = glfwGetMonitorName(this->_handle);
         return (str ? str : "");
     }
 
     tbaricault::math::Vector2<int> Monitor::getPhysicalSize() const noexcept
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
         tbaricault::math::Vector2<int> size;
         glfwGetMonitorPhysicalSize(
-            this->_glfwElement,
+            this->_handle,
             &size.x,
             &size.y
         );
@@ -103,11 +103,11 @@ namespace tbaricault::glfwwrapper
 
     tbaricault::math::Vector2<float> Monitor::getScale() const noexcept
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
         tbaricault::math::Vector2<float> scale;
         glfwGetMonitorContentScale(
-            this->_glfwElement,
+            this->_handle,
             &scale.x,
             &scale.y
         );
@@ -116,15 +116,15 @@ namespace tbaricault::glfwwrapper
 
     tbaricault::math::Rect<int> Monitor::getRect() const noexcept
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
         tbaricault::math::Rect<int> rect;
         glfwGetMonitorPos(
-            this->_glfwElement,
+            this->_handle,
             &rect.x,
             &rect.y
         );
-        const GLFWvidmode* mode = glfwGetVideoMode(this->_glfwElement);
+        const GLFWvidmode* mode = glfwGetVideoMode(this->_handle);
         if (!mode)
             return {};
         rect.w = mode->width;
@@ -134,11 +134,11 @@ namespace tbaricault::glfwwrapper
 
     tbaricault::math::Rect<int> Monitor::getWorkRect() const noexcept
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
         tbaricault::math::Rect<int> rect;
         glfwGetMonitorWorkarea(
-            this->_glfwElement,
+            this->_handle,
             &rect.x,
             &rect.y,
             &rect.w,
@@ -149,9 +149,9 @@ namespace tbaricault::glfwwrapper
 
     Monitor::VideoMode Monitor::getVideoMode() const noexcept
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
-        const GLFWvidmode* mode = glfwGetVideoMode(this->_glfwElement);
+        const GLFWvidmode* mode = glfwGetVideoMode(this->_handle);
         if (!mode)
             return {};
         return {
@@ -168,10 +168,10 @@ namespace tbaricault::glfwwrapper
 
     std::vector<Monitor::VideoMode> Monitor::getVideoModes() const
     {
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return {};
         int count;
-        const GLFWvidmode* modes = glfwGetVideoModes(this->_glfwElement, &count);
+        const GLFWvidmode* modes = glfwGetVideoModes(this->_handle, &count);
         if (modes == nullptr)
             return {};
         std::vector<Monitor::VideoMode> result;
@@ -195,9 +195,9 @@ namespace tbaricault::glfwwrapper
     Monitor::GammaRamp Monitor::getGammaRamp() const
     {
         GammaRamp result;
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return (result);
-        const GLFWgammaramp* ramp = glfwGetGammaRamp(this->_glfwElement);
+        const GLFWgammaramp* ramp = glfwGetGammaRamp(this->_handle);
         if (!ramp)
             return (result);
         result.red.assign(ramp->red, ramp->red + ramp->size);
@@ -208,8 +208,8 @@ namespace tbaricault::glfwwrapper
 
     void Monitor::setGamma(float gamma) noexcept
     {
-        if (this->_glfwElement)
-            glfwSetGamma(this->_glfwElement, gamma);
+        if (this->_handle)
+            glfwSetGamma(this->_handle, gamma);
         return;
     }
 
@@ -217,7 +217,7 @@ namespace tbaricault::glfwwrapper
     {
         if (ramp.red.size() != ramp.green.size() || ramp.red.size() != ramp.blue.size())
             throw std::invalid_argument("gamma ramp components must have the same size");
-        if (!this->_glfwElement)
+        if (!this->_handle)
             return;
         GLFWgammaramp glfwRamp = {
             const_cast<unsigned short*>(ramp.red.data()),
@@ -229,7 +229,7 @@ namespace tbaricault::glfwwrapper
                 ramp.blue.size()
             }))
         };
-        glfwSetGammaRamp(this->_glfwElement, &glfwRamp);
+        glfwSetGammaRamp(this->_handle, &glfwRamp);
         return;
     }
 

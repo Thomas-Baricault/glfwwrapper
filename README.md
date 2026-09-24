@@ -128,7 +128,7 @@ class Window
 
 int main()
 {
-    TBARICAULT_GLFWWRAPPER_INIT
+    if (tbaricault::glfwwrapper::Runtime _{})
     {
         Window w("Test");
         while (w)

@@ -12,15 +12,15 @@ namespace tbaricault::glfwwrapper
 {
 
     Cursor::Cursor(Cursor&& other) noexcept
-        : _glfwElement(other._glfwElement)
+        : _handle(other._handle)
     {
-        other._glfwElement = nullptr;
+        other._handle = nullptr;
         return;
     }
 
     Cursor::Cursor(Cursor::Standard cursor) noexcept
     {
-        this->_glfwElement = glfwCreateStandardCursor(static_cast<int>(cursor));
+        this->_handle = glfwCreateStandardCursor(static_cast<int>(cursor));
         return;
     }
 
@@ -31,7 +31,7 @@ namespace tbaricault::glfwwrapper
             image.getSize().y,
             reinterpret_cast<unsigned char*>(image.getPixels()),
         };
-        this->_glfwElement = glfwCreateCursor(
+        this->_handle = glfwCreateCursor(
             &glfwImage,
             hotspot.x,
             hotspot.y
@@ -41,8 +41,8 @@ namespace tbaricault::glfwwrapper
 
     Cursor::~Cursor() noexcept
     {
-        if (this->_glfwElement)
-            glfwDestroyCursor(this->_glfwElement);
+        if (this->_handle)
+            glfwDestroyCursor(this->_handle);
         return;
     }
 
@@ -50,21 +50,21 @@ namespace tbaricault::glfwwrapper
     {
         if (&other == this)
             return (*this);
-        if (this->_glfwElement)
-            glfwDestroyCursor(this->_glfwElement);
-        this->_glfwElement = other._glfwElement;
-        other._glfwElement = nullptr;
+        if (this->_handle)
+            glfwDestroyCursor(this->_handle);
+        this->_handle = other._handle;
+        other._handle = nullptr;
         return (*this);
     }
 
     Cursor::operator bool() const noexcept
     {
-        return (this->_glfwElement != nullptr);
+        return (this->_handle != nullptr);
     }
 
-    GLFWcursor* Cursor::getGLFWElement() const noexcept
+    GLFWcursor* Cursor::getHandle() const noexcept
     {
-        return (this->_glfwElement);
+        return (this->_handle);
     }
 
 }

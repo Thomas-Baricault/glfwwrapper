@@ -183,7 +183,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @return GLFW pointer
              */
-            GLFWmonitor* getGLFWElement() const noexcept;
+            GLFWmonitor* getHandle() const noexcept;
 
             /**
              * @brief Returns the monitor name
@@ -273,7 +273,7 @@ namespace tbaricault::glfwwrapper
             /**
              * @brief GLFW pointer
              */
-            GLFWmonitor* _glfwElement = nullptr;
+            GLFWmonitor* _handle = nullptr;
 
 
             /**
@@ -290,7 +290,7 @@ namespace tbaricault::glfwwrapper
             static void _updateReferences();
 
 
-            friend class Context;
+            friend class Runtime;
 
     };
 

@@ -14,11 +14,11 @@ TARGETS		=	glew32				\
 				tbaricault::math
 
 SRC			=	Clipboard	\
-				Context		\
 				Cursor		\
 				events		\
 				Keyboard	\
 				Monitor		\
+				Runtime		\
 				Time		\
 				Window
 
