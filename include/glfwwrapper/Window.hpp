@@ -21,6 +21,7 @@
 #include "Keyboard.hpp"
 #include "Monitor.hpp"
 #include "Mouse.hpp"
+#include "Wrapper.hpp"
 
 
 namespace tbaricault::glfwwrapper
@@ -30,6 +31,7 @@ namespace tbaricault::glfwwrapper
      * @brief Window wrapper
      */
     class Window
+        : public Wrapper<GLFWwindow>
     {
 
         public:
@@ -152,7 +154,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @param other Window to move
              */
-            Window(Window&& other) noexcept;
+            Window(Window&& other) noexcept = default;
 
             /**
              * @brief Constructs a window
@@ -181,12 +183,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @return Reference to this window
              */
-            Window& operator=(Window&& other) noexcept;
-
-            /**
-             * @brief Returns whether the window is in a valid state
-             */
-            explicit operator bool() const noexcept;
+            Window& operator=(Window&& other) noexcept = default;
 
             /**
              * @brief Checks whether the window is windowed
@@ -687,145 +684,147 @@ namespace tbaricault::glfwwrapper
 
         private:
 
-            GLFWwindow* _handle = nullptr;
-
+            /**
+             * @brief Destroys the window
+             */
+            void _destroy() noexcept override;
 
             /**
              * @brief Static GLFW callback for window move events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param x New horizontal window coordinate
              * @param y New vertical window coordinate
              */
-            static void _moveCallback(GLFWwindow* glfwWindow, int x, int y);
+            static void _moveCallback(GLFWwindow* handle, int x, int y);
 
             /**
              * @brief Static GLFW callback for window resize events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param width New window width
              * @param height New window height
              */
-            static void _resizeCallback(GLFWwindow* glfwWindow, int width, int height);
+            static void _resizeCallback(GLFWwindow* handle, int width, int height);
 
             /**
              * @brief Static GLFW callback for window iconify events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param iconified Whether the window was iconified, `false` means restored
              */
-            static void _iconifyCallback(GLFWwindow* glfwWindow, int iconified);
+            static void _iconifyCallback(GLFWwindow* handle, int iconified);
 
             /**
              * @brief Static GLFW callback for window maximize events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param maximized Whether the window was maximized, `false` means restored
              */
-            static void _maximizeCallback(GLFWwindow* glfwWindow, int maximized);
+            static void _maximizeCallback(GLFWwindow* handle, int maximized);
 
             /**
              * @brief Static GLFW callback for window framebuffer resize events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param width New framebuffer width
              * @param height New framebuffer height
              */
-            static void _framebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height);
+            static void _framebufferResizeCallback(GLFWwindow* handle, int width, int height);
 
             /**
              * @brief Static GLFW callback for window content scale change events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param x New horizontal content scale
              * @param y New vertical content scale
              */
-            static void _contentScaleCallback(GLFWwindow* glfwWindow, float x, float y);
+            static void _contentScaleCallback(GLFWwindow* handle, float x, float y);
 
             /**
              * @brief Static GLFW callback for window focus events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param focused Whether the window is focused
              */
-            static void _focusCallback(GLFWwindow* glfwWindow, int focused);
+            static void _focusCallback(GLFWwindow* handle, int focused);
 
             /**
              * @brief Static GLFW callback for window keyboard events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param key Key called
              * @param scancode Key scancode
              * @param action Event action
              * @param modifiers Active key modifiers
              */
-            static void _keyCallback(GLFWwindow* glfwWindow, int key, int scancode, int action, int modifiers);
+            static void _keyCallback(GLFWwindow* handle, int key, int scancode, int action, int modifiers);
 
             /**
              * @brief Static GLFW callback for window keychar events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param codePoint Char unicode cope point
              */
-            static void _charCallback(GLFWwindow* glfwWindow, unsigned int codePoint);
+            static void _charCallback(GLFWwindow* handle, unsigned int codePoint);
 
             /**
              * @brief Static GLFW callback for window mouse button events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param button Mouse button called
              * @param action Event action
              * @param modifiers Active key modifiers
              */
-            static void _mouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int modifiers);
+            static void _mouseButtonCallback(GLFWwindow* handle, int button, int action, int modifiers);
 
             /**
              * @brief Static GLFW callback for window scroll events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param x Horizontal scroll offset
              * @param y Vertical scroll offset
              */
-            static void _scrollCallback(GLFWwindow* glfwWindow, double x, double y);
+            static void _scrollCallback(GLFWwindow* handle, double x, double y);
 
             /**
              * @brief Static GLFW callback for window cursor move events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param pos New cursor position
              */
-            static void _cursorMoveCallback(GLFWwindow* glfwWindow, double x, double y);
+            static void _cursorMoveCallback(GLFWwindow* handle, double x, double y);
 
             /**
              * @brief Static GLFW callback for window cursor hover events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param hovered Whether the cursor hovers over the window
              */
-            static void _cursorHoverCallback(GLFWwindow* glfwWindow, int hovered);
+            static void _cursorHoverCallback(GLFWwindow* handle, int hovered);
 
             /**
              * @brief Static GLFW callback for window drop events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              * @param count File paths count
              * @param paths File paths dropped
              */
-            static void _dropCallback(GLFWwindow* glfwWindow, int count, const char** paths);
+            static void _dropCallback(GLFWwindow* handle, int count, const char** paths);
 
             /**
              * @brief Static GLFW callback for window refresh events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              */
-            static void _refreshCallback(GLFWwindow* glfwWindow);
+            static void _refreshCallback(GLFWwindow* handle);
 
             /**
              * @brief Static GLFW callback for window close events
              * 
-             * @param glfwWindow GLFW window pointer
+             * @param handle GLFW handle
              */
-            static void _closeCallback(GLFWwindow* glfwWindow);
+            static void _closeCallback(GLFWwindow* handle);
 
     };
 

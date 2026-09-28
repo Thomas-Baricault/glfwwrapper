@@ -20,7 +20,8 @@ SRC			=	Clipboard	\
 				Monitor		\
 				Runtime		\
 				Time		\
-				Window
+				Window		\
+				Wrapper
 
 
 all: build

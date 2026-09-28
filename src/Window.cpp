@@ -103,13 +103,6 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    Window::Window(Window&& other) noexcept
-        : _handle(other._handle)
-    {
-        other._handle = nullptr;
-        return;
-    }
-
     Window::Window(const std::string& title, const tbaricault::math::Vector2<int>& size, const Monitor& monitor, const Window& share)
     {
         this->_handle = glfwCreateWindow(
@@ -151,23 +144,8 @@ namespace tbaricault::glfwwrapper
 
     Window::~Window() noexcept
     {
-        if (this->_handle)
-            glfwDestroyWindow(this->_handle);
+        this->_destroy();
         return;
-    }
-
-    Window& Window::operator=(Window&& other) noexcept
-    {
-        if (&other == this)
-            return (*this);
-        this->_handle = other._handle;
-        other._handle = nullptr;
-        return (*this);
-    }
-
-    Window::operator bool() const noexcept
-    {
-        return (this->_handle != nullptr);
     }
 
     bool Window::isWindowed() const noexcept
@@ -247,7 +225,7 @@ namespace tbaricault::glfwwrapper
 
     Monitor& Window::getMonitor() const noexcept
     {
-        return (Monitor::getByGLFWElement(glfwGetWindowMonitor(this->_handle)));
+        return (Monitor::getByHandle(glfwGetWindowMonitor(this->_handle)));
     }
 
     std::string Window::getTitle() const
@@ -708,53 +686,63 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    void Window::_moveCallback(GLFWwindow* glfwWindow, int x, int y)
+    void Window::_destroy() noexcept
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleMove({x, y});
+        if (this->_handle)
+        {
+            glfwDestroyWindow(this->_handle);
+            this->_handle = nullptr;
+        }
         return;
     }
 
-    void Window::_resizeCallback(GLFWwindow* glfwWindow, int width, int height)
+    void Window::_moveCallback(GLFWwindow* handle, int x, int y)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleResize({width, height});
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleMove({x, y});
         return;
     }
 
-    void Window::_iconifyCallback(GLFWwindow* glfwWindow, int iconified)
+    void Window::_resizeCallback(GLFWwindow* handle, int width, int height)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleIconify(iconified);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleResize({width, height});
         return;
     }
 
-    void Window::_maximizeCallback(GLFWwindow* glfwWindow, int maximized)
+    void Window::_iconifyCallback(GLFWwindow* handle, int iconified)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleMaximize(maximized);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleIconify(iconified);
         return;
     }
 
-    void Window::_framebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height)
+    void Window::_maximizeCallback(GLFWwindow* handle, int maximized)
     {
-        glfwMakeContextCurrent(glfwWindow);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleMaximize(maximized);
+        return;
+    }
+
+    void Window::_framebufferResizeCallback(GLFWwindow* handle, int width, int height)
+    {
+        glfwMakeContextCurrent(handle);
         glViewport(0, 0, width, height);
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleFramebufferResize({width, height});
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleFramebufferResize({width, height});
         return;
     }
 
-    void Window::_contentScaleCallback(GLFWwindow* glfwWindow, float x, float y)
+    void Window::_contentScaleCallback(GLFWwindow* handle, float x, float y)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleContentScale({x, y});
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleContentScale({x, y});
         return;
     }
 
-    void Window::_focusCallback(GLFWwindow* glfwWindow, int focused)
+    void Window::_focusCallback(GLFWwindow* handle, int focused)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleFocus(focused);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleFocus(focused);
         return;
     }
 
-    void Window::_keyCallback(GLFWwindow* glfwWindow, int key, int scancode, int action, int modifiers)
+    void Window::_keyCallback(GLFWwindow* handle, int key, int scancode, int action, int modifiers)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleKey(
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleKey(
             static_cast<Keyboard::Key>(key),
             scancode,
             static_cast<Keyboard::Action>(action),
@@ -763,15 +751,15 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    void Window::_charCallback(GLFWwindow* glfwWindow, unsigned int codePoint)
+    void Window::_charCallback(GLFWwindow* handle, unsigned int codePoint)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleChar(codePoint);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleChar(codePoint);
         return;
     }
 
-    void Window::_mouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int modifiers)
+    void Window::_mouseButtonCallback(GLFWwindow* handle, int button, int action, int modifiers)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleMouseButton(
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleMouseButton(
             static_cast<Mouse::Button>(button),
             static_cast<Keyboard::Action>(action),
             static_cast<unsigned char>(modifiers)
@@ -779,42 +767,42 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    void Window::_scrollCallback(GLFWwindow* glfwWindow, double x, double y)
+    void Window::_scrollCallback(GLFWwindow* handle, double x, double y)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleScroll({x, y});
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleScroll({x, y});
         return;
     }
 
-    void Window::_cursorMoveCallback(GLFWwindow* glfwWindow, double x, double y)
+    void Window::_cursorMoveCallback(GLFWwindow* handle, double x, double y)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleCursorMove({x, y});
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleCursorMove({x, y});
         return;
     }
 
-    void Window::_cursorHoverCallback(GLFWwindow* glfwWindow, int hovered)
+    void Window::_cursorHoverCallback(GLFWwindow* handle, int hovered)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleCursorHover(hovered);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleCursorHover(hovered);
         return;
     }
 
-    void Window::_dropCallback(GLFWwindow* glfwWindow, int count, const char** paths)
+    void Window::_dropCallback(GLFWwindow* handle, int count, const char** paths)
     {
         std::vector<std::string_view> v;
         while (count--)
             v.push_back(*paths++);
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleDrop(v);
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleDrop(v);
         return;
     }
 
-    void Window::_refreshCallback(GLFWwindow* glfwWindow)
+    void Window::_refreshCallback(GLFWwindow* handle)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleRefresh();
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleRefresh();
         return;
     }
 
-    void Window::_closeCallback(GLFWwindow* glfwWindow)
+    void Window::_closeCallback(GLFWwindow* handle)
     {
-        static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow))->_handleClose();
+        static_cast<Window*>(glfwGetWindowUserPointer(handle))->_handleClose();
         return;
     }
 

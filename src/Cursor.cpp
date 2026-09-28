@@ -11,13 +11,6 @@
 namespace tbaricault::glfwwrapper
 {
 
-    Cursor::Cursor(Cursor&& other) noexcept
-        : _handle(other._handle)
-    {
-        other._handle = nullptr;
-        return;
-    }
-
     Cursor::Cursor(Cursor::Standard cursor) noexcept
     {
         this->_handle = glfwCreateStandardCursor(static_cast<int>(cursor));
@@ -41,30 +34,18 @@ namespace tbaricault::glfwwrapper
 
     Cursor::~Cursor() noexcept
     {
-        if (this->_handle)
-            glfwDestroyCursor(this->_handle);
+        this->_destroy();
         return;
     }
 
-    Cursor& Cursor::operator=(Cursor&& other) noexcept
+    void Cursor::_destroy() noexcept
     {
-        if (&other == this)
-            return (*this);
         if (this->_handle)
+        {
             glfwDestroyCursor(this->_handle);
-        this->_handle = other._handle;
-        other._handle = nullptr;
-        return (*this);
-    }
-
-    Cursor::operator bool() const noexcept
-    {
-        return (this->_handle != nullptr);
-    }
-
-    GLFWcursor* Cursor::getHandle() const noexcept
-    {
-        return (this->_handle);
+            this->_handle = nullptr;
+        }
+        return;
     }
 
 }

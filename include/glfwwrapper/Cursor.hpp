@@ -13,6 +13,8 @@
 
 #include <tbaricault/images.hpp>
 
+#include "Wrapper.hpp"
+
 
 namespace tbaricault::glfwwrapper
 {
@@ -21,6 +23,7 @@ namespace tbaricault::glfwwrapper
      * @brief Mouse cursor
      */
     class Cursor final
+        : public Wrapper<GLFWcursor>
     {
 
         public:
@@ -98,7 +101,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @param other Cursor to move
              */
-            Cursor(Cursor&& other) noexcept;
+            Cursor(Cursor&& other) noexcept = default;
 
             /**
              * @brief Constructs a standard cursor
@@ -118,7 +121,7 @@ namespace tbaricault::glfwwrapper
             /**
              * @brief Destructor
              */
-            ~Cursor() noexcept;
+            virtual ~Cursor() noexcept;
 
             /**
              * @brief Copy assignment operator is disabled
@@ -132,27 +135,15 @@ namespace tbaricault::glfwwrapper
              * 
              * @return Reference to this cursor
              */
-            Cursor& operator=(Cursor&& other) noexcept;
-
-            /**
-             * @brief Returns whether the cursor is in a valid state
-             */
-            explicit operator bool() const noexcept;
-
-            /**
-             * @brief Returns the cursor GLFW pointer
-             * 
-             * @return GLFW pointer
-             */
-            GLFWcursor* getHandle() const noexcept;
+            Cursor& operator=(Cursor&& other) noexcept = default;
 
 
         private:
 
             /**
-             * @brief GLFW pointer
+             * @brief Destroys the cursor
              */
-            GLFWcursor* _handle = nullptr;
+            void _destroy() noexcept override;
 
     };
 

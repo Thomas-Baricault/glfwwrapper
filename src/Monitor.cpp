@@ -28,7 +28,7 @@ namespace tbaricault::glfwwrapper
 
     Monitor& Monitor::getPrimary() noexcept
     {
-        return (Monitor::getByGLFWElement(glfwGetPrimaryMonitor()));
+        return (Monitor::getByHandle(glfwGetPrimaryMonitor()));
     }
 
     std::span<const std::reference_wrapper<Monitor>> Monitor::getAll() noexcept
@@ -36,48 +36,22 @@ namespace tbaricault::glfwwrapper
         return (Monitor::_references);
     }
 
-    Monitor& Monitor::getByGLFWElement(GLFWmonitor* glfwMonitor) noexcept
+    Monitor& Monitor::getByHandle(GLFWmonitor* handle) noexcept
     {
-        if (glfwMonitor == nullptr || !Monitor::_registered.contains(glfwMonitor))
+        if (handle == nullptr || !Monitor::_registered.contains(handle))
             return (Monitor::Invalid);
-        return (*Monitor::_registered.at(glfwMonitor));
+        return (*Monitor::_registered.at(handle));
     }
 
-    Monitor::Monitor(Monitor&& other) noexcept
-        : _handle(other._handle)
-    {
-        other._handle = nullptr;
-        return;
-    }
-
-    Monitor::Monitor(GLFWmonitor* glfwMonitor) noexcept
-        : _handle(glfwMonitor)
+    Monitor::Monitor(GLFWmonitor* handle) noexcept
+        : _handle(handle)
     {
         return;
-    }
-
-    Monitor& Monitor::operator=(Monitor&& other) noexcept
-    {
-        if (&other == this)
-            return (*this);
-        this->_handle = other._handle;
-        other._handle = nullptr;
-        return (*this);
-    }
-
-    Monitor::operator bool() const noexcept
-    {
-        return (this->_handle != nullptr);
     }
 
     bool Monitor::isPrimary() const noexcept
     {
         return (this->_handle && glfwGetPrimaryMonitor() == this->_handle);
-    }
-
-    GLFWmonitor* Monitor::getHandle() const noexcept
-    {
-        return (this->_handle);
     }
 
     std::string Monitor::getName() const
@@ -233,21 +207,27 @@ namespace tbaricault::glfwwrapper
         return;
     }
 
-    void Monitor::_callback(GLFWmonitor* glfwMonitor, int event)
+    void Monitor::_destroy() noexcept
+    {
+        this->_handle = nullptr;
+        return;
+    }
+
+    void Monitor::_callback(GLFWmonitor* handle, int event)
     {
         switch (event)
         {
             case (GLFW_CONNECTED):
             {
-                Monitor::_registered[glfwMonitor] = std::make_unique<Monitor>(glfwMonitor);
+                Monitor::_registered[handle] = std::make_unique<Monitor>(handle);
                 Monitor::_updateReferences();
                 break;
             }
             case (GLFW_DISCONNECTED):
             {
-                if (Monitor::_registered.contains(glfwMonitor))
+                if (Monitor::_registered.contains(handle))
                 {
-                    Monitor::_registered.erase(glfwMonitor);
+                    Monitor::_registered.erase(handle);
                     Monitor::_updateReferences();
                 }
                 break;

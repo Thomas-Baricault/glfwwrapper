@@ -18,6 +18,8 @@
 
 #include <tbaricault/math.hpp>
 
+#include "Wrapper.hpp"
+
 
 namespace tbaricault::glfwwrapper
 {
@@ -26,6 +28,7 @@ namespace tbaricault::glfwwrapper
      * @brief Monitor wrapper
      */
     class Monitor final
+        : public Wrapper<GLFWmonitor>
     {
 
         public:
@@ -115,13 +118,13 @@ namespace tbaricault::glfwwrapper
             static std::span<const std::reference_wrapper<Monitor>> getAll() noexcept;
 
             /**
-             * @brief Returns the monitor associated with a GLFW pointer
+             * @brief Returns the monitor associated with a handle
              * 
-             * @param glfwMonitor GLFW pointer
+             * @param handle GLFW handle
              * 
              * @return Monitor
              */
-            static Monitor& getByGLFWElement(GLFWmonitor* glfwMonitor) noexcept;
+            static Monitor& getByHandle(GLFWmonitor* handle) noexcept;
 
             /**
              * @brief Contrucs an invalid monitor
@@ -138,19 +141,19 @@ namespace tbaricault::glfwwrapper
              * 
              * @param other Monitor to move
              */
-            Monitor(Monitor&& other) noexcept;
+            Monitor(Monitor&& other) noexcept = default;
 
             /**
-             * @brief Constructs a monitor from GLFW monitor pointer
+             * @brief Constructs a monitor from GLFW handle
              * 
-             * @param glfwMonitor GLFW monitor pointer
+             * @param handle GLFW handle
              */
-            Monitor(GLFWmonitor* glfwMonitor) noexcept;
+            Monitor(GLFWmonitor* handle) noexcept;
 
             /**
              * @brief Destructor
              */
-            ~Monitor() noexcept = default;
+            virtual ~Monitor() noexcept = default;
 
             /**
              * @brief Copy assignment is disabled
@@ -164,12 +167,7 @@ namespace tbaricault::glfwwrapper
              * 
              * @return Reference to this monitor
              */
-            Monitor& operator=(Monitor&& other) noexcept;
-
-            /**
-             * @brief Returns whether the monitor is in a valid state
-             */
-            explicit operator bool() const noexcept;
+            Monitor& operator=(Monitor&& other) noexcept = default;
 
             /**
              * @brief Checks whether the monitor is the primary monitor
@@ -177,13 +175,6 @@ namespace tbaricault::glfwwrapper
              * @return `true` if is primary, `false` otherwise
              */
             bool isPrimary() const noexcept;
-
-            /**
-             * @brief Returns the monitor GLFW pointer
-             * 
-             * @return GLFW pointer
-             */
-            GLFWmonitor* getHandle() const noexcept;
 
             /**
              * @brief Returns the monitor name
@@ -277,12 +268,17 @@ namespace tbaricault::glfwwrapper
 
 
             /**
+             * @brief Destroys the monitor
+             */
+            void _destroy() noexcept override;
+
+            /**
              * @brief Monitor event callback
              * 
-             * @param glfwMonitor GLFW monitor pointer
+             * @param handle GLFW handle
              * @param event Event
              */
-            static void _callback(GLFWmonitor* glfwMonitor, int event);
+            static void _callback(GLFWmonitor* handle, int event);
 
             /**
              * @brief Updates references vector
@@ -290,7 +286,7 @@ namespace tbaricault::glfwwrapper
             static void _updateReferences();
 
 
-            friend class Runtime;
+        friend class Runtime;
 
     };
 
