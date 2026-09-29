@@ -87,3 +87,6 @@ namespace tbaricault::glfwwrapper
     };
 
 }
+
+
+#include "Wrapper.tpp"

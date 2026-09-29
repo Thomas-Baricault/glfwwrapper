@@ -5,7 +5,7 @@
  */
 
 
-#include "glfwwrapper/Wrapper.hpp"
+#include "Wrapper.hpp"
 
 
 namespace tbaricault::glfwwrapper
