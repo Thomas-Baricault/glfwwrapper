@@ -5,12 +5,13 @@ ENV			?=
 
 PACKAGES	=	GLEW				\
 				glfw3				\
+				OpenGL				\
 				tbaricault_images	\
 				tbaricault_math
 
 TARGETS		=	GLEW::GLEW			\
 				glfw				\
-				opengl32			\
+				OpenGL::GL			\
 				tbaricault::images	\
 				tbaricault::math
 
