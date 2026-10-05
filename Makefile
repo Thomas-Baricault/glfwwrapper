@@ -3,11 +3,12 @@ VERSION		?=	1.0.0
 ENV			?=	
 
 
-PACKAGES	=	glfw3				\
+PACKAGES	=	GLEW				\
+				glfw3				\
 				tbaricault_images	\
 				tbaricault_math
 
-TARGETS		=	glew32				\
+TARGETS		=	GLEW::GLEW			\
 				glfw				\
 				opengl32			\
 				tbaricault::images	\
