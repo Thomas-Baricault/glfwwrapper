@@ -23,24 +23,24 @@ namespace tbaricault::glfwwrapper
 
     std::size_t Monitor::getCount() noexcept
     {
-        return (Monitor::_registered.size());
+        return Monitor::_registered.size();
     }
 
     Monitor& Monitor::getPrimary() noexcept
     {
-        return (Monitor::getByHandle(glfwGetPrimaryMonitor()));
+        return Monitor::getByHandle(glfwGetPrimaryMonitor());
     }
 
     std::span<const std::reference_wrapper<Monitor>> Monitor::getAll() noexcept
     {
-        return (Monitor::_references);
+        return Monitor::_references;
     }
 
     Monitor& Monitor::getByHandle(GLFWmonitor* handle) noexcept
     {
         if (handle == nullptr || !Monitor::_registered.contains(handle))
-            return (Monitor::Invalid);
-        return (*Monitor::_registered.at(handle));
+            return Monitor::Invalid;
+        return *Monitor::_registered.at(handle);
     }
 
     Monitor::Monitor(GLFWmonitor* handle) noexcept
@@ -51,15 +51,17 @@ namespace tbaricault::glfwwrapper
 
     bool Monitor::isPrimary() const noexcept
     {
-        return (this->_handle && glfwGetPrimaryMonitor() == this->_handle);
+        return this->_handle && glfwGetPrimaryMonitor() == this->_handle;
     }
 
     std::string Monitor::getName() const
     {
         if (!this->_handle)
-            return ("");
+            return "";
         const char* str = glfwGetMonitorName(this->_handle);
-        return (str ? str : "");
+        return str
+            ? str
+            : "";
     }
 
     tbaricault::math::Vector2<int> Monitor::getPhysicalSize() const noexcept
@@ -72,7 +74,7 @@ namespace tbaricault::glfwwrapper
             &size.x,
             &size.y
         );
-        return (size);
+        return size;
     }
 
     tbaricault::math::Vector2<float> Monitor::getScale() const noexcept
@@ -85,7 +87,7 @@ namespace tbaricault::glfwwrapper
             &scale.x,
             &scale.y
         );
-        return (scale);
+        return scale;
     }
 
     tbaricault::math::Rect<int> Monitor::getRect() const noexcept
@@ -103,7 +105,7 @@ namespace tbaricault::glfwwrapper
             return {};
         rect.w = mode->width;
         rect.h = mode->height;
-        return (rect);
+        return rect;
     }
 
     tbaricault::math::Rect<int> Monitor::getWorkRect() const noexcept
@@ -118,7 +120,7 @@ namespace tbaricault::glfwwrapper
             &rect.w,
             &rect.h
         );
-        return (rect);
+        return rect;
     }
 
     Monitor::VideoMode Monitor::getVideoMode() const noexcept
@@ -163,21 +165,21 @@ namespace tbaricault::glfwwrapper
                 modes[i].refreshRate
             });
         }
-        return (result);
+        return result;
     }
 
     Monitor::GammaRamp Monitor::getGammaRamp() const
     {
         GammaRamp result;
         if (!this->_handle)
-            return (result);
+            return result;
         const GLFWgammaramp* ramp = glfwGetGammaRamp(this->_handle);
         if (!ramp)
-            return (result);
+            return result;
         result.red.assign(ramp->red, ramp->red + ramp->size);
         result.green.assign(ramp->green, ramp->green + ramp->size);
         result.blue.assign(ramp->blue, ramp->blue + ramp->size);
-        return (result);
+        return result;
     }
 
     void Monitor::setGamma(float gamma) noexcept

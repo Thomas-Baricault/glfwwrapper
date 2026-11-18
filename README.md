@@ -1,8 +1,8 @@
 # tbaricault::glfwwrapper
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![C++23](https://img.shields.io/badge/C%2B%2B-23-blue)
-![CMake](https://img.shields.io/badge/CMake-3.20%2B-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+![C++23](https://img.shields.io/badge/C%2B%2B-23-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)
+![CMake](https://img.shields.io/badge/CMake-3.20%2B-064F8C?style=for-the-badge&logo=cmake&logoColor=white)
 
 ## Description
 
@@ -22,6 +22,7 @@ This is a C++23 wrapper library around GLFW. It's provides wrappers classes to m
 - [Documentation](#documentation)
 - [Examples](#examples)
     - [Simple window](#simple-window)
+- [Roadmap](#roadmap)
 - [License](#license)
 
 ## Features
@@ -120,7 +121,7 @@ class Window
             glVertex2f(-0.75, -0.75);
             glEnd();
 
-            return (true);
+            return true;
         }
 
 };
@@ -138,7 +139,7 @@ int main()
         }
     }
 
-    return (0);
+    return 0;
 }
 ```
 
@@ -149,6 +150,7 @@ Output:
 ## Roadmap
 
 - Thread safety
+- Joystick
 
 ## License
 

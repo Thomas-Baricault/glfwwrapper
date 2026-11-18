@@ -44,7 +44,7 @@ namespace tbaricault::glfwwrapper
 
     Runtime::operator bool() const noexcept
     {
-        return (this->_valid);
+        return this->_valid;
     }
 
 }

@@ -150,93 +150,95 @@ namespace tbaricault::glfwwrapper
 
     bool Window::isWindowed() const noexcept
     {
-        return (glfwGetWindowMonitor(this->_handle) == nullptr);
+        return glfwGetWindowMonitor(this->_handle) == nullptr;
     }
 
     bool Window::isFocused() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_FOCUSED));
+        return glfwGetWindowAttrib(this->_handle, GLFW_FOCUSED);
     }
 
     bool Window::isIconified() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_ICONIFIED));
+        return glfwGetWindowAttrib(this->_handle, GLFW_ICONIFIED);
     }
 
     bool Window::isMaximized() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_MAXIMIZED));
+        return glfwGetWindowAttrib(this->_handle, GLFW_MAXIMIZED);
     }
 
     bool Window::isHovered() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_HOVERED));
+        return glfwGetWindowAttrib(this->_handle, GLFW_HOVERED);
     }
 
     bool Window::isVisible() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_VISIBLE));
+        return glfwGetWindowAttrib(this->_handle, GLFW_VISIBLE);
     }
 
     bool Window::isResizable() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_RESIZABLE));
+        return glfwGetWindowAttrib(this->_handle, GLFW_RESIZABLE);
     }
 
     bool Window::isDecorated() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_DECORATED));
+        return glfwGetWindowAttrib(this->_handle, GLFW_DECORATED);
     }
 
     bool Window::isAutoIconify() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_AUTO_ICONIFY));
+        return glfwGetWindowAttrib(this->_handle, GLFW_AUTO_ICONIFY);
     }
 
     bool Window::isHoverAll() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_FLOATING));
+        return glfwGetWindowAttrib(this->_handle, GLFW_FLOATING);
     }
 
     bool Window::isTransparent() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_TRANSPARENT_FRAMEBUFFER));
+        return glfwGetWindowAttrib(this->_handle, GLFW_TRANSPARENT_FRAMEBUFFER);
     }
 
     bool Window::isFocusedOnShow() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_FOCUS_ON_SHOW));
+        return glfwGetWindowAttrib(this->_handle, GLFW_FOCUS_ON_SHOW);
     }
 
     bool Window::isMousePassThrought() const noexcept
     {
-        return (glfwGetWindowAttrib(this->_handle, GLFW_MOUSE_PASSTHROUGH));
+        return glfwGetWindowAttrib(this->_handle, GLFW_MOUSE_PASSTHROUGH);
     }
 
     bool Window::isKeyPressed(Keyboard::Key key) const noexcept
     {
-        return (glfwGetKey(this->_handle, static_cast<int>(key)) == static_cast<int>(Keyboard::Action::Pressed));
+        return glfwGetKey(this->_handle, static_cast<int>(key)) == static_cast<int>(Keyboard::Action::Pressed);
     }
 
     bool Window::isMouseButtonPressed(Mouse::Button button) const noexcept
     {
-        return (glfwGetMouseButton(this->_handle, static_cast<int>(button)) == static_cast<int>(Mouse::Action::Pressed));
+        return glfwGetMouseButton(this->_handle, static_cast<int>(button)) == static_cast<int>(Mouse::Action::Pressed);
     }
 
     Monitor& Window::getMonitor() const noexcept
     {
-        return (Monitor::getByHandle(glfwGetWindowMonitor(this->_handle)));
+        return Monitor::getByHandle(glfwGetWindowMonitor(this->_handle));
     }
 
     std::string Window::getTitle() const
     {
         const char* title = glfwGetWindowTitle(this->_handle);
-        return (title ? title : "");
+        return title
+            ? title
+            : "";
     }
 
     float Window::getOpacity() const noexcept
     {
-        return (glfwGetWindowOpacity(this->_handle));
+        return glfwGetWindowOpacity(this->_handle);
     }
 
     tbaricault::math::Rect<int> Window::getRect() const noexcept
@@ -252,7 +254,7 @@ namespace tbaricault::glfwwrapper
             &rect.w,
             &rect.h
         );
-        return (rect);
+        return rect;
     }
 
     tbaricault::math::Rect<int> Window::getBorderSize() const noexcept
@@ -265,7 +267,7 @@ namespace tbaricault::glfwwrapper
             &rect.w,
             &rect.h
         );
-        return (rect);
+        return rect;
     }
 
     tbaricault::math::Vector2<int> Window::getContentSize() const noexcept
@@ -276,7 +278,7 @@ namespace tbaricault::glfwwrapper
             &size.x,
             &size.y
         );
-        return (size);
+        return size;
     }
 
     tbaricault::math::Vector2<float> Window::getContentScale() const noexcept
@@ -287,7 +289,7 @@ namespace tbaricault::glfwwrapper
             &size.x,
             &size.y
         );
-        return (size);
+        return size;
     }
 
     unsigned char Window::getActiveModifiers() const noexcept
@@ -301,7 +303,7 @@ namespace tbaricault::glfwwrapper
             modifiers |= static_cast<unsigned char>(Device::Modifier::Alt);
         if (this->isKeyPressed(Keyboard::Key::LeftSuper) || this->isKeyPressed(Keyboard::Key::RightSuper))
             modifiers |= static_cast<unsigned char>(Device::Modifier::Super);
-        return (modifiers);
+        return modifiers;
     }
 
     unsigned char Window::getActiveMouseButtons() const noexcept
@@ -310,7 +312,7 @@ namespace tbaricault::glfwwrapper
         for (unsigned char i = 0; i < 8; i++)
             if (this->isMouseButtonPressed(static_cast<Mouse::Button>(i)))
                 buttons |= 1 << i;
-        return (buttons);
+        return buttons;
     }
 
     tbaricault::math::Vector2<double> Window::getCursorPos() const noexcept
@@ -321,7 +323,7 @@ namespace tbaricault::glfwwrapper
             &pos.x,
             &pos.y
         );
-        return (pos);
+        return pos;
     }
 
     void Window::setTitle(const std::string& title) noexcept
@@ -599,7 +601,7 @@ namespace tbaricault::glfwwrapper
     bool Window::_render()
     {
         glfwMakeContextCurrent(this->_handle);
-        return (false);
+        return false;
     }
 
     void Window::_handleMove(const tbaricault::math::Vector2<int>&)

@@ -17,7 +17,9 @@ namespace tbaricault::glfwwrapper
     std::string Clipboard::paste()
     {
         const char* str = glfwGetClipboardString(nullptr);
-        return (str ? str : "");
+        return str
+            ? str
+            : "";
     }
 
     void Clipboard::copy(const std::string& str) noexcept

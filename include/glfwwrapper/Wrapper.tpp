@@ -23,23 +23,23 @@ namespace tbaricault::glfwwrapper
     Wrapper<T>& Wrapper<T>::operator=(Wrapper&& other) noexcept
     {
         if (&other == this)
-            return (*this);
+            return *this;
         this->_destroy();
         this->_handle = other._handle;
         other._handle = nullptr;
-        return (*this);
+        return *this;
     }
 
     template<typename T>
     Wrapper<T>::operator bool() const noexcept
     {
-        return (this->_handle != nullptr);
+        return this->_handle != nullptr;
     }
 
     template<typename T>
     T* Wrapper<T>::getHandle() const noexcept
     {
-        return (this->_handle);
+        return this->_handle;
     }
 
 }

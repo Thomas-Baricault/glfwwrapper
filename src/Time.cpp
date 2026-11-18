@@ -16,17 +16,17 @@ namespace tbaricault::glfwwrapper
 
     double Time::get() noexcept
     {
-        return (glfwGetTime());
+        return glfwGetTime();
     }
 
     uint64_t Time::value() noexcept
     {
-        return (glfwGetTimerValue());
+        return glfwGetTimerValue();
     }
 
     uint64_t Time::frequency() noexcept
     {
-        return (glfwGetTimerFrequency());
+        return glfwGetTimerFrequency();
     }
 
     void Time::set(double time) noexcept
